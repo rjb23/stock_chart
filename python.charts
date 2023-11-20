@@ -1,0 +1,53 @@
+import yfinance as yf
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+
+
+def get_stock_data(symbol, start_date, end_date):
+    try:
+        # Download historical stock data from Yahoo Finance
+        stock_data = yf.download(symbol, start=start_date, end=end_date)
+        return stock_data
+    except Exception as e:
+        print(f"Error fetching stock data: {e}")
+        return None
+
+
+def plot_stock_chart(company_name, symbol, stock_data):
+    plt.figure(figsize=(10, 6))
+    plt.plot(stock_data["Close"], label="Stock Price")
+    plt.title(f"Historical Stock Prices for {company_name} ({symbol})")
+    plt.xlabel("Date")
+    plt.ylabel("Stock Price (USD)")
+    plt.legend()
+    plt.show()
+
+
+def main():
+    company_name = input("Enter the company name: ")
+    symbol = input("Enter the stock symbol: ")
+
+    try:
+        # Input date range
+        start_year = int(input("Enter the start year: "))
+        end_year = int(input("Enter the end year: "))
+
+        # Convert years to dates
+        start_date = datetime(start_year, 1, 1)
+        end_date = datetime(end_year, 12, 31)
+
+        # Fetch historical stock data
+        stock_data = get_stock_data(symbol, start_date, end_date)
+
+        if stock_data is not None:
+            # Plot the stock chart
+            plot_stock_chart(company_name, symbol, stock_data)
+        else:
+            print("Failed to fetch stock data.")
+
+    except ValueError as ve:
+        print(f"Error: {ve}")
+
+
+if __name__ == "__main__":
+    main()
